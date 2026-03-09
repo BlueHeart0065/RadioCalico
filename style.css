@@ -1,0 +1,239 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --accent:   #c084fc;
+  --accent2:  #818cf8;
+  --bg:       #0f0f13;
+  --surface:  #1a1a24;
+  --surface2: #22223a;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --radius:   18px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ambient blurred background glow */
+.bg-blur {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 20%, #7c3aed33 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 75% 80%, #2563eb22 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Player card ── */
+.player-card {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 94vw);
+  background: var(--surface);
+  border: 1px solid #ffffff10;
+  border-radius: var(--radius);
+  padding: 32px 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-shadow: 0 24px 60px #00000060, 0 0 0 1px #ffffff08;
+}
+
+/* ── Visualizer ── */
+.visualizer-wrap {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+#visualizer {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cat-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.8rem;
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px var(--accent));
+  transition: opacity 0.4s;
+}
+.cat-icon.hidden { opacity: 0; }
+
+/* ── Station header ── */
+.station-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.station-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quality-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: #c084fc18;
+  border: 1px solid #c084fc30;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+
+/* ── Now playing ── */
+.now-playing {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.np-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.np-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.np-artist {
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.play-btn {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px #c084fc50;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+}
+.play-btn:hover:not(:disabled) { transform: scale(1.07); box-shadow: 0 6px 28px #c084fc70; }
+.play-btn:active:not(:disabled) { transform: scale(0.96); }
+.play-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.play-btn svg { width: 26px; height: 26px; }
+
+.volume-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vol-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.vol-icon:hover { color: var(--text); }
+
+.vol-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface2);
+  outline: none;
+  cursor: pointer;
+}
+.vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 6px #c084fc80;
+}
+.vol-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.vol-pct {
+  font-size: 0.75rem;
+  color: var(--muted);
+  width: 34px;
+  text-align: right;
+}
+
+
+/* ── Status bar ── */
+.status-bar {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+  min-height: 1em;
+  transition: color 0.3s;
+}
+.status-bar.error { color: #f87171; }
+.status-bar.ok    { color: #4ade80; }
+
+/* ── Spin animation for loading icon ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin { animation: spin 0.8s linear infinite; }

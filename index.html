@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RadioCalico</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-blur"></div>
+
+  <main class="player-card">
+
+    <div class="visualizer-wrap">
+      <canvas id="visualizer"></canvas>
+      <div class="cat-icon">🐈</div>
+    </div>
+
+    <div class="station-info">
+      <h1 class="station-name">RadioCalico</h1>
+      <span class="quality-badge">FLAC · Lossless HLS</span>
+    </div>
+
+    <div class="now-playing" id="now-playing">
+      <div class="np-label">NOW PLAYING</div>
+      <div class="np-title" id="np-title">—</div>
+      <div class="np-artist" id="np-artist">Connect a stream to begin</div>
+    </div>
+
+    <div class="controls">
+      <button id="play-btn" class="play-btn" aria-label="Play / Pause" disabled>
+        <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <svg id="icon-loading" viewBox="0 0 24 24" fill="currentColor" style="display:none" class="spin"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" opacity=".3"/><path d="M12 2v4a8 8 0 0 1 8 8h4A12 12 0 0 0 12 2z"/></svg>
+      </button>
+
+      <div class="volume-row">
+        <svg id="vol-icon-on" class="vol-icon" viewBox="0 0 24 24" fill="currentColor" title="Mute"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <svg id="vol-icon-off" class="vol-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none" title="Unmute"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18L19 19.27 20.27 18 5.27 3 4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+        <input type="range" id="volume" class="vol-slider" min="0" max="1" step="0.01" value="0.8" />
+        <span id="vol-pct" class="vol-pct">80%</span>
+      </div>
+    </div>
+
+    <div id="status-bar" class="status-bar">Loading stream…</div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="stream-manager.js"></script>
+  <script src="streamHealthMonitor.js"></script>
+  <script src="nowPlaying.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

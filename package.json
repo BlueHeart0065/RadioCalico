@@ -1,0 +1,14 @@
+{
+  "name": "radiocalico",
+  "version": "1.0.0",
+  "scripts": {
+    "dev":              "live-server --port=3000 --open=index.html --ignore=server,node_modules",
+    "test":             "jest",
+    "test:unit":        "jest tests/stream-management.test.js",
+    "test:connectivity": "jest tests/connectivity.test.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "live-server": "^1.2.2"
+  }
+}
