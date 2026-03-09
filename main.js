@@ -14,6 +14,8 @@ const volIconOff  = document.getElementById('vol-icon-off');
 const statusBar  = document.getElementById('status-bar');
 const npTitle    = document.getElementById('np-title');
 const npArtist   = document.getElementById('np-artist');
+const rpList     = document.getElementById('rp-list');
+const albumCover = document.getElementById('album-cover');
 const catIcon    = document.querySelector('.cat-icon');
 const canvas     = document.getElementById('visualizer');
 const ctx        = canvas.getContext('2d');
@@ -138,6 +140,8 @@ const manager = new StreamManager({
 const nowPlaying = new NowPlaying({
   npTitle,
   npArtist,
+  rpList,
+  albumCover,
   HlsEvents: Hls.Events,
 });
 
@@ -159,6 +163,10 @@ const monitor = new StreamHealthMonitor({
   },
 });
 
+const listenerBadge = document.getElementById('listener-badge');
+const listenerCount = new ListenerCount({ badge: listenerBadge });
+listenerCount.connect();
+
 // ── Play / pause ─────────────────────────────────────────────────────────────
 async function togglePlay() {
   if (audioCtx?.state === 'suspended') await audioCtx.resume();
@@ -169,6 +177,7 @@ async function togglePlay() {
     showIcon('play');
     setStatus('Paused');
     catIcon.classList.remove('hidden');
+    listenerCount.stopListening();
   } else {
     showIcon('loading');
     setStatus('Buffering…');
@@ -179,6 +188,7 @@ async function togglePlay() {
       showIcon('pause');
       setStatus('Playing · lossless HLS', 'ok');
       catIcon.classList.add('hidden');
+      listenerCount.startListening();
     } catch (err) {
       setStatus('Playback error: ' + err.message, 'error');
       showIcon('play');

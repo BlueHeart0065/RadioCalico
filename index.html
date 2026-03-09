@@ -13,12 +13,14 @@
 
     <div class="visualizer-wrap">
       <canvas id="visualizer"></canvas>
+      <img id="album-cover" class="album-cover" alt="Album cover" />
       <div class="cat-icon">🐈</div>
     </div>
 
     <div class="station-info">
       <h1 class="station-name">RadioCalico</h1>
       <span class="quality-badge">FLAC · Lossless HLS</span>
+      <span class="listener-badge" id="listener-badge">— listening</span>
     </div>
 
     <div class="now-playing" id="now-playing">
@@ -44,9 +46,20 @@
 
     <div id="status-bar" class="status-bar">Loading stream…</div>
 
+    <div class="recently-played" id="recently-played">
+      <div class="rp-header">
+        <span class="rp-label">Recently Played</span>
+      </div>
+      <ol class="rp-list" id="rp-list">
+        <li class="rp-empty">No history yet</li>
+      </ol>
+    </div>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="listenerCount.js"></script>
   <script src="stream-manager.js"></script>
   <script src="streamHealthMonitor.js"></script>
   <script src="nowPlaying.js"></script>

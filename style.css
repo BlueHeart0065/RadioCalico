@@ -56,7 +56,7 @@ body {
 .visualizer-wrap {
   position: relative;
   width: 100%;
-  height: 120px;
+  height: 180px;
   border-radius: 12px;
   overflow: hidden;
   background: var(--bg);
@@ -67,6 +67,26 @@ body {
   height: 100%;
   display: block;
 }
+
+.album-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 2px #ffffff12,
+    0 0 24px #c084fc55,
+    0 8px 24px #00000080;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+.album-cover.loaded { opacity: 1; }
 
 .cat-icon {
   position: absolute;
@@ -79,6 +99,9 @@ body {
   transition: opacity 0.4s;
 }
 .cat-icon.hidden { opacity: 0; }
+
+/* hide cat when album cover is visible */
+.visualizer-wrap:has(.album-cover.loaded) .cat-icon { opacity: 0; }
 
 /* ── Station header ── */
 .station-info {
@@ -106,6 +129,17 @@ body {
   color: var(--accent);
   background: #c084fc18;
   border: 1px solid #c084fc30;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+
+.listener-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #4ade80;
+  background: #4ade8018;
+  border: 1px solid #4ade8030;
   padding: 3px 9px;
   border-radius: 100px;
 }
@@ -231,6 +265,85 @@ body {
 }
 .status-bar.error { color: #f87171; }
 .status-bar.ok    { color: #4ade80; }
+
+/* ── Recently Played ── */
+.recently-played {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #ffffff0d;
+  padding-top: 18px;
+}
+
+.rp-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rp-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.rp-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rp-empty {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+.rp-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.rp-item:hover { background: #ffffff07; }
+
+.rp-num {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rp-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.rp-artist {
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* ── Spin animation for loading icon ── */
 @keyframes spin {
