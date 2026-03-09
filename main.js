@@ -167,6 +167,12 @@ const listenerBadge = document.getElementById('listener-badge');
 const listenerCount = new ListenerCount({ badge: listenerBadge });
 listenerCount.connect();
 
+const reactions = new Reactions({
+  socket:    listenerCount.socket,
+  container: document.getElementById('reaction-panel'),
+});
+reactions.init();
+
 // ── Play / pause ─────────────────────────────────────────────────────────────
 async function togglePlay() {
   if (audioCtx?.state === 'suspended') await audioCtx.resume();

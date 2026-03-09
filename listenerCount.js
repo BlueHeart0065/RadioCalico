@@ -32,6 +32,8 @@ class ListenerCount {
     this._socket?.emit('stop_listening');
   }
 
+  get socket() { return this._socket; }
+
   disconnect() {
     this._socket?.disconnect();
     this._socket  = null;

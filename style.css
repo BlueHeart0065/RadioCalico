@@ -350,3 +350,58 @@ body {
   to { transform: rotate(360deg); }
 }
 .spin { animation: spin 0.8s linear infinite; }
+
+/* ── Reaction panel ── */
+.reaction-panel {
+  border-top: 1px solid #ffffff0d;
+  padding-top: 14px;
+}
+
+.reaction-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 100px;
+  border: 1px solid #ffffff14;
+  background: var(--surface2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+.reaction-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px #00000040;
+}
+.reaction-btn:active {
+  transform: translateY(0);
+}
+
+.reaction-btn--active {
+  background: #c084fc18;
+  border-color: #c084fc50;
+  box-shadow: 0 0 8px #c084fc28;
+}
+
+.reaction-btn--pending {
+  opacity: 0.7;
+}
+
+.reaction-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.reaction-count {
+  font-size: 0.7rem;
+  color: var(--muted);
+  min-height: 1em;
+  min-width: 0.5ch;
+}
