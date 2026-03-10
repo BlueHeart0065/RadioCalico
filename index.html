@@ -9,6 +9,13 @@
 <body>
   <div class="bg-blur"></div>
 
+  <div id="auth-bar">
+    <span id="auth-username"></span>
+    <button id="btn-login">Login</button>
+    <button id="btn-register">Register</button>
+    <button id="btn-logout" hidden>Logout</button>
+  </div>
+
   <main class="player-card">
 
     <div class="visualizer-wrap">
@@ -59,8 +66,35 @@
 
   </main>
 
+  <!-- Login Modal -->
+  <div id="modal-login" class="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-login-title">
+      <h2 id="modal-login-title">Login</h2>
+      <input id="login-username" placeholder="Username" autocomplete="username" />
+      <input id="login-password" type="password" placeholder="Password" autocomplete="current-password" />
+      <p id="login-error" class="error-msg"></p>
+      <button id="login-submit" class="modal-btn-primary">Login</button>
+      <button class="modal-close" aria-label="Close">&#x2715;</button>
+      <p class="modal-footer">No account? <a id="goto-register" href="#">Register</a></p>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="modal-register" class="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-register-title">
+      <h2 id="modal-register-title">Register</h2>
+      <input id="register-username" placeholder="Username (3-30 chars, a-z 0-9 _)" autocomplete="username" />
+      <input id="register-password" type="password" placeholder="Password (min 8 chars)" autocomplete="new-password" />
+      <p id="register-error" class="error-msg"></p>
+      <button id="register-submit" class="modal-btn-primary">Register</button>
+      <button class="modal-close" aria-label="Close">&#x2715;</button>
+      <p class="modal-footer">Have an account? <a id="goto-login" href="#">Login</a></p>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="auth.js"></script>
   <script src="listenerCount.js"></script>
   <script src="reactions.js"></script>
   <script src="stream-manager.js"></script>

@@ -1,23 +1,24 @@
 const REACTION_EMOJIS = ['❤️', '🔥', '🎵', '👍', '😍', '✨'];
 
 class Reactions {
-  constructor({ socket, container }) {
+  constructor({ socket, container, auth }) {
     this._socket    = socket;
     this._container = container;
-    this._userId    = this._getOrCreateUserId();
+    this._auth      = auth || null;
     this._counts    = Object.fromEntries(REACTION_EMOJIS.map(e => [e, 0]));
     this._userReactions = new Set();
     this._pending   = new Set();
     this._debounceTimers = {};
   }
 
-  _getOrCreateUserId() {
+  _getUserId() {
+    if (this._auth) return this._auth.getUserId();
+    // Fallback: anonymous UUID from localStorage
     let id = localStorage.getItem('rc_user_id');
     if (!id) {
       if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         id = crypto.randomUUID();
       } else {
-        // Fallback for older browsers
         id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
           const r = Math.random() * 16 | 0;
           return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -71,16 +72,28 @@ class Reactions {
       this._updateDOM();
     });
 
+    this._socket.on('reaction_error', ({ error }) => {
+      if (error === 'login_required' && this._auth) {
+        this._auth.showLoginModal();
+      }
+    });
+
     this._socket.on('connect', () => {
       this._fetchInitialState();
     });
   }
 
   _fetchInitialState() {
-    this._socket.emit('reaction_fetch', { user_id: this._userId });
+    this._socket.emit('reaction_fetch', { user_id: this._getUserId() });
   }
 
   _handleClick(emoji) {
+    // Gate behind login
+    if (this._auth && !this._auth.getState().loggedIn) {
+      this._auth.showLoginModal();
+      return;
+    }
+
     if (this._pending.has(emoji)) return;
 
     const snapshot = {
@@ -90,7 +103,7 @@ class Reactions {
 
     this._pending.add(emoji);
     this._applyOptimisticUpdate(emoji);
-    this._socket.emit('reaction_toggle', { emoji, user_id: this._userId });
+    this._socket.emit('reaction_toggle', { emoji, user_id: this._getUserId() });
 
     const timeout = setTimeout(() => {
       if (this._pending.has(emoji)) {

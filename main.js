@@ -119,6 +119,140 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 drawVisualizer();
 
+// ── Auth ──────────────────────────────────────────────────────────────────────
+const auth = new Auth();
+
+function updateAuthBar(state) {
+  const usernameEl  = document.getElementById('auth-username');
+  const btnLogin    = document.getElementById('btn-login');
+  const btnRegister = document.getElementById('btn-register');
+  const btnLogout   = document.getElementById('btn-logout');
+
+  if (state.loggedIn) {
+    usernameEl.textContent = state.username;
+    btnLogin.hidden    = true;
+    btnRegister.hidden = true;
+    btnLogout.hidden   = false;
+  } else {
+    usernameEl.textContent = '';
+    btnLogin.hidden    = false;
+    btnRegister.hidden = false;
+    btnLogout.hidden   = true;
+  }
+}
+
+auth.onChange(updateAuthBar);
+
+// Modal helpers
+function openModal(id) {
+  document.getElementById(id).hidden = false;
+}
+function closeModal(id) {
+  document.getElementById(id).hidden = true;
+}
+function clearModalError(errorId) {
+  document.getElementById(errorId).textContent = '';
+}
+
+// Auth bar buttons
+document.getElementById('btn-login').addEventListener('click', () => {
+  clearModalError('login-error');
+  openModal('modal-login');
+  document.getElementById('login-username').focus();
+});
+document.getElementById('btn-register').addEventListener('click', () => {
+  clearModalError('register-error');
+  openModal('modal-register');
+  document.getElementById('register-username').focus();
+});
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await auth.logout();
+});
+
+// Cross-link between modals
+document.getElementById('goto-register').addEventListener('click', (e) => {
+  e.preventDefault();
+  closeModal('modal-login');
+  clearModalError('register-error');
+  openModal('modal-register');
+  document.getElementById('register-username').focus();
+});
+document.getElementById('goto-login').addEventListener('click', (e) => {
+  e.preventDefault();
+  closeModal('modal-register');
+  clearModalError('login-error');
+  openModal('modal-login');
+  document.getElementById('login-username').focus();
+});
+
+// Close buttons
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.closest('.modal').hidden = true;
+  });
+});
+
+// Close on backdrop click
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.hidden = true;
+  });
+});
+
+// Login form submit
+document.getElementById('login-submit').addEventListener('click', async () => {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl  = document.getElementById('login-error');
+  const btn      = document.getElementById('login-submit');
+
+  errorEl.textContent = '';
+  btn.disabled = true;
+  try {
+    await auth.login(username, password);
+    document.getElementById('login-password').value = '';
+    closeModal('modal-login');
+  } catch (err) {
+    errorEl.textContent = err.message || 'Login failed';
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// Register form submit
+document.getElementById('register-submit').addEventListener('click', async () => {
+  const username = document.getElementById('register-username').value.trim();
+  const password = document.getElementById('register-password').value;
+  const errorEl  = document.getElementById('register-error');
+  const btn      = document.getElementById('register-submit');
+
+  errorEl.textContent = '';
+  btn.disabled = true;
+  try {
+    await auth.register(username, password);
+    document.getElementById('register-password').value = '';
+    closeModal('modal-register');
+  } catch (err) {
+    errorEl.textContent = err.message || 'Registration failed';
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// Enter key in modal inputs
+document.getElementById('login-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('login-submit').click();
+});
+document.getElementById('login-username').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('login-password').focus();
+});
+document.getElementById('register-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('register-submit').click();
+});
+document.getElementById('register-username').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('register-password').focus();
+});
+
 // ── StreamManager ─────────────────────────────────────────────────────────────
 const manager = new StreamManager({
   audio,
@@ -170,6 +304,7 @@ listenerCount.connect();
 const reactions = new Reactions({
   socket:    listenerCount.socket,
   container: document.getElementById('reaction-panel'),
+  auth,
 });
 reactions.init();
 
@@ -216,3 +351,6 @@ audio.addEventListener('waiting', () => { if (manager.playing) setStatus('Buffer
 audio.addEventListener('playing', () => { if (manager.playing) setStatus('Playing · lossless HLS', 'ok'); });
 audio.addEventListener('stalled', () => setStatus('Stream stalled…', 'error'));
 audio.addEventListener('error',   () => setStatus('Audio error.', 'error'));
+
+// ── Init auth (after all modules are set up) ──────────────────────────────────
+auth.init();

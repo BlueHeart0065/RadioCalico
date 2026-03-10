@@ -405,3 +405,139 @@ body {
   min-height: 1em;
   min-width: 0.5ch;
 }
+
+/* ── Auth bar ── */
+#auth-bar {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+#auth-username {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#auth-bar button {
+  background: var(--surface2);
+  border: 1px solid #ffffff14;
+  color: var(--text);
+  padding: 4px 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+#auth-bar button:hover {
+  background: #c084fc18;
+  border-color: #c084fc50;
+}
+
+/* ── Modals ── */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00000080;
+  backdrop-filter: blur(4px);
+}
+.modal[hidden] { display: none; }
+
+.modal-box {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid #ffffff14;
+  border-radius: var(--radius);
+  padding: 32px 28px 24px;
+  width: min(380px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 24px 60px #00000070;
+}
+
+.modal-box h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-box input {
+  background: var(--surface2);
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.modal-box input:focus {
+  border-color: var(--accent);
+}
+.modal-box input::placeholder {
+  color: var(--muted);
+}
+
+.modal-btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 11px;
+  transition: opacity 0.15s, transform 0.12s;
+}
+.modal-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.modal-btn-primary:active { transform: translateY(0); }
+.modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--text); }
+
+.modal-footer {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+.modal-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-footer a:hover { text-decoration: underline; }
+
+.error-msg {
+  font-size: 0.8rem;
+  color: #f87171;
+  min-height: 1em;
+}

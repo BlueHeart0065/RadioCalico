@@ -9,7 +9,7 @@ class ListenerCount {
 
   connect() {
     if (this._socket) return;
-    this._socket = io(SOCKET_URL, { transports: ['websocket'], reconnection: true });
+    this._socket = io(SOCKET_URL, { transports: ['websocket'], reconnection: true, withCredentials: true });
 
     this._socket.on('connect', () => {
       if (this._playing) this._socket.emit('start_listening');
