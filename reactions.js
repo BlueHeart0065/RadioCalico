@@ -1,4 +1,5 @@
 const REACTION_EMOJIS = ['❤️', '🔥', '🎵', '👍', '😍', '✨'];
+const REACTIONS_API = 'http://localhost:5000';
 
 class Reactions {
   constructor({ socket, container, auth }) {
@@ -72,12 +73,6 @@ class Reactions {
       this._updateDOM();
     });
 
-    this._socket.on('reaction_error', ({ error }) => {
-      if (error === 'login_required' && this._auth) {
-        this._auth.showLoginModal();
-      }
-    });
-
     this._socket.on('connect', () => {
       this._fetchInitialState();
     });
@@ -87,7 +82,7 @@ class Reactions {
     this._socket.emit('reaction_fetch', { user_id: this._getUserId() });
   }
 
-  _handleClick(emoji) {
+  async _handleClick(emoji) {
     // Gate behind login
     if (this._auth && !this._auth.getState().loggedIn) {
       this._auth.showLoginModal();
@@ -97,28 +92,33 @@ class Reactions {
     if (this._pending.has(emoji)) return;
 
     const snapshot = {
-      counts:       { ...this._counts },
+      counts:        { ...this._counts },
       userReactions: new Set(this._userReactions),
     };
 
     this._pending.add(emoji);
     this._applyOptimisticUpdate(emoji);
-    this._socket.emit('reaction_toggle', { emoji, user_id: this._getUserId() });
 
-    const timeout = setTimeout(() => {
-      if (this._pending.has(emoji)) {
+    try {
+      const res = await fetch(`${REACTIONS_API}/api/reactions/toggle`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emoji }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.error === 'login_required' && this._auth) {
+          this._auth.showLoginModal();
+        }
         this._revertOptimisticUpdate(emoji, snapshot);
-        this._pending.delete(emoji);
-        this._updateDOM();
       }
-    }, 3000);
-
-    // Clear timeout when server confirms via reaction_update
-    const cleanup = () => {
-      clearTimeout(timeout);
-      this._socket.off('reaction_update', cleanup);
-    };
-    this._socket.once('reaction_update', cleanup);
+    } catch (_) {
+      this._revertOptimisticUpdate(emoji, snapshot);
+    } finally {
+      this._pending.delete(emoji);
+      this._updateDOM();
+    }
   }
 
   _applyOptimisticUpdate(emoji) {

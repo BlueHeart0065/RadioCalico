@@ -141,7 +141,11 @@ function updateAuthBar(state) {
   }
 }
 
-auth.onChange(updateAuthBar);
+auth.onChange((state) => {
+  updateAuthBar(state);
+  // Reconnect socket so Flask-SocketIO picks up the updated session cookie
+  listenerCount?.reconnect();
+});
 
 // Modal helpers
 function openModal(id) {

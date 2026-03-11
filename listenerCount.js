@@ -34,6 +34,13 @@ class ListenerCount {
 
   get socket() { return this._socket; }
 
+  reconnect() {
+    if (this._socket) {
+      this._socket.disconnect();
+      this._socket.connect();
+    }
+  }
+
   disconnect() {
     this._socket?.disconnect();
     this._socket  = null;
