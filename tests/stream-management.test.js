@@ -4,7 +4,7 @@
 
 'use strict';
 
-const { StreamManager } = require('../stream-manager');
+const { StreamManager } = require('../client/js/stream-manager');
 
 // ── Mock Hls ──────────────────────────────────────────────────────────────────
 class MockHls {

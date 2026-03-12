@@ -25,7 +25,7 @@ global.document = {
   getElementById: jest.fn(() => ({ hidden: false, focus: jest.fn() })),
 };
 
-const { Auth } = require('../auth.js');
+const { Auth } = require('../client/js/auth.js');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function mockFetch(body, status = 200) {
@@ -138,7 +138,7 @@ describe('Auth module', () => {
 });
 
 // ── Reactions gating tests ────────────────────────────────────────────────────
-const { Reactions } = require('../reactions.js');
+const { Reactions } = require('../client/js/reactions.js');
 
 function makeSocket() {
   const handlers = {};

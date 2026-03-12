@@ -3,7 +3,7 @@
 
 'use strict';
 
-const { StreamHealthMonitor } = require('../streamHealthMonitor');
+const { StreamHealthMonitor } = require('../client/js/streamHealthMonitor');
 
 // ── Mock Hls ──────────────────────────────────────────────────────────────────
 class MockHls {
